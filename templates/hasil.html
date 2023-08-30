@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="card shadow">
+   		<div class="card-header py-3">
+	        <h4 class="m-0 font-weight-bold text-navy">Output</h4>
+	    </div>
+	    <div class="card-body">
+	    	<!-- <h5 class="font-weight-bolder mb-4">Output Download Hasil Deteksi</h5>
+	    	<div class="mb-2">
+	    		<div class="mb-2">Dokumen A & Dokumen B = 80%, 10 second</div>
+	    		<div class="mb-2">1. Hasil Metode Pembobota Teks :</div>
+	    		<div class="mb-2">2. Hasil Metode Similarity Teks :</div>
+	    		<div class="mb-2">3. Hasil Akhir Nilai Similarity :</div>
+	    		<div class="mb-2">File name: {{ name }}</div>
+	    		<div class="mb-2">Text content: {{ text }}</div>
+	    	</div> -->
+	    	<div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Filename</th>
+                            <th>Content</th>
+                            <!-- <th>Aksi</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in data %}
+                        <tr>
+                        	<td>{{ item.filename }}</td>
+                        	<td>{{ item.text }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+     	</div>
+   </div>
+   
+ {% endblock %}

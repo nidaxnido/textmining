@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="home d-flex flex-column h-100">
+  	<div class="text-center">
+  		<h1>Aplikasi Pendeteksi Duplikasi</h1>
+    	<h1>Dokumen Teks Bahasa Indonesia</h1>	
+      <h1>{{data }}</h1>
+  	</div>
+  	<div class="text-center" style="flex:1">
+  		
+  		<img src="{{ url_for('static', filename='img/search-illustration.svg') }}" class="" height="400px" >
+  	</div>
+
+    
+  </div>
+{% endblock %}
+The same goes for about.html:
+

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Duplicate Detection</title>
+    
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fontawesome/css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.min.css') }}">
+    <link href="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
+    <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
+</head>
+  <body>
+    <div id="wrapper">
+      <ul class="navbar-nav bg-dark sidebar sidebar-dark accordion" id="accordionSidebar">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('home') }}" style="margin-top: 3rem;margin-bottom: 2rem;">
+            <img src="{{ url_for('static', filename='img/logo.jpeg') }}" height="80px">
+        </a>
+        <li class="nav-item text-white mx-auto">
+          Welcome, {{ session['username'] }}
+        </li>
+        <hr class="sidebar-divider">
+        <li class="nav-item {% if tag=='home' %} active {% endif %}">
+            <a class="nav-link" href="{{ url_for('home') }}">
+                <!-- <i class="fas fa-home"></i> -->
+                <img src="{{ url_for('static', filename='img/icons/icon home.png') }}" class="sidebar-icons">
+                <span>Home</span>
+            </a>
+        </li>
+        <li class="nav-item {% if tag=='user' %} active {% endif %}">
+            <a class="nav-link" href="{{ url_for('user') }}">
+                <i class="fa fa-user sidebar-icons text-center" style="color: black;width: 23px;margin-right: 12px;"></i>
+                <!-- <img src="{{ url_for('static', filename='img/icons/icon kamus sinonim.png') }}" class="sidebar-icons"> -->
+                <span>User</span>
+            </a>
+        </li>
+        <li class="nav-item {% if tag=='sinonim' %} active {% endif %}">
+            <a class="nav-link" href="{{ url_for('sinonim') }}">
+                <!-- <i class="fas fa-home"></i> -->
+                <img src="{{ url_for('static', filename='img/icons/icon kamus sinonim.png') }}" class="sidebar-icons">
+                <span>Kamus Sinonim</span>
+            </a>
+        </li>
+        <li class="nav-item {% if tag=='stopwords' %} active {% endif %}">
+            <a class="nav-link" href="{{ url_for('stopwords') }}">
+                <!-- <i class="fas fa-home"></i> -->
+                <img src="{{ url_for('static', filename='img/icons/icon kamus kata stopword.png') }}" class="sidebar-icons">
+                <span>Kamus Stopwords</span>
+            </a>
+        </li>
+        <li class="nav-item {% if tag=='katadasar' %} active {% endif %}">
+            <a class="nav-link" href="{{ url_for('katadasar') }}">
+                <!-- <i class="fas fa-home"></i> -->
+                <img src="{{ url_for('static', filename='img/icons/icon kamus kata dasar.png') }}" class="sidebar-icons">
+                <span>Kamus Kata Dasar</span>
+            </a>
+        </li>
+        <li class="nav-item {% if tag=='deteksi' %} active {% endif %}">
+            <a class="nav-link" href="{{ url_for('deteksi') }}">
+                <!-- <i class="fas fa-home"></i> -->
+                <img src="{{ url_for('static', filename='img/icons/icon proses deteksi.png') }}" class="sidebar-icons">
+                <span>Proses Deteksi</span>
+            </a>
+        </li>
+        <!-- <li class="nav-item {% if tag=='hasil' %} active {% endif %}">
+            <a class="nav-link" href="{{ url_for('hasil') }}">
+        
+                <img src="{{ url_for('static', filename='img/icons/icon hasil deteksi.png') }}" class="sidebar-icons">
+                <span>Hasil Deteksi</span>
+            </a>
+        </li> -->
+        <li class="nav-item {% if tag=='setting' %} active {% endif %}">
+            <a class="nav-link" href="{{ url_for('setting') }}">
+                <!-- <i class="fas fa-fw fa-cog"></i> -->
+                <img src="{{ url_for('static', filename='img/icons/icon settings.png') }}" class="sidebar-icons">
+                <span>Settings</span>
+            </a>
+        </li>
+
+        <li class="nav-item mt-4">
+            <a class="nav-link" href="{{ url_for('logout') }}">
+                <!-- <i class="fas fa-sign-out-alt" style="color: red;"></i> -->
+                <img src="{{ url_for('static', filename='img/icons/icon logout.png') }}" class="sidebar-icons">
+                <span>Exit</span>
+            </a>
+        </li>
+      </ul>
+      <div id="content">
+        <div class="container-fluid">
+          {% block content %}
+          {% endblock %}    
+        </div>
+      </div>
+    </div>
+      <!-- Bootstrap core JavaScript-->
+      
+      <script src="{{ url_for('static', filename='vendor/bootstrap/bootstrap.bundle.min.js') }}"></script>
+
+      <!-- Core plugin JavaScript-->
+      <!-- <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}vendor/jquery-easing/jquery.easing.min.js"></script> -->
+
+      <!-- Custom scripts for all pages-->
+      <script src="{{ url_for('static', filename='js/custom.min.js') }}"></script>
+
+      <!-- Page level plugins -->
+      <script src="{{ url_for('static', filename='vendor/datatables/jquery.dataTables.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
+
+      <!-- Page level custom scripts -->
+      <script src="{{ url_for('static', filename='js/demo.js') }}"></script>
+  </body>
+</html>

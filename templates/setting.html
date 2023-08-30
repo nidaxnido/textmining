@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="card shadow">
+   		<div class="card-header py-3">
+	        <h4 class="m-0 font-weight-bold text-navy">Settings</h4>
+	    </div>
+	    <div class="card-body">
+	    	<h5 class="font-weight-bolder mb-4">Form Change Setting Winnowing</h5>
+	    	<form method="post" action="{{ url_for('editsetting') }}">
+	    	<div class="d-flex justify-content-between">
+	    		<div class="col-lg-5 div-setting" style="border:1px solid #343037; border-radius: 8px;">
+	    			<div class="row d-flex justify-content-between mb-2">
+	    				<label class="col-label col-lg-8">Ukuran K-Gram</label>
+	    				<div class="mr-3">
+		    				<span>=</span>
+		    					<input type="number" name="kgram" class="myinput" maxlength="1" style="width: 3rem;" max="10" min="0" value="{{ data[3] }}">
+	    				</div>
+	    			</div>
+	    			<div class="row d-flex justify-content-between mb-2">
+	    				<label class="col-label col-lg-8">Ukuran Basis Hash</label>
+	    				<div class="mr-3">
+		    				<span>=</span>
+		    					<input type="number" name="hash" class="myinput" maxlength="1" style="width: 3rem;" max="10" min="0" value="{{ data[4] }}">
+	    				</div>
+	    			</div>
+	    			<div class="row d-flex justify-content-between mb-2">
+	    				<label class="col-label col-lg-8">Ukuran Windows</label>
+	    				<div class="mr-3">
+		    				<span>=</span>
+		    					<input type="number" name="windows" class="myinput" maxlength="1" style="width: 3rem;" max="10" min="0" value="{{ data[5] }}">
+	    				</div>
+	    			</div>
+	    		</div>
+	    		<div class="col-lg-5 div-setting" style="border:1px solid #343037; border-radius: 8px;">
+	    			<div class="row d-flex justify-content-between mb-2">
+	    				<label class="col-label col-lg-8">Mengunakan Stemming</label>
+	    				<div class="mr-3 d-flex">
+		    				<span>=</span>
+		    					<input type="checkbox" name="stemming" class="myinput" maxlength="1" style="width: 3rem;" {% if data[1] == 1 %}checked {% endif %}>
+	    				</div>
+	    			</div>
+	    			<div class="row d-flex justify-content-between mb-2">
+	    				<label class="col-label col-lg-8">Mengunakan Stopword</label>
+	    				<div class="mr-3 d-flex">
+		    				<span>=</span>
+		    					<input type="checkbox" name="stopword" class="myinput" maxlength="1" style="width: 3rem;" {% if data[2] == 1 %}checked {% endif %}>
+	    				</div>
+	    			</div>
+	    		</div>
+	    		
+	    	</div>
+	    	<div class="row mx-0 justify-content-end my-3">
+	    			<button type="submit" class="btn btn-secondary">save</button>
+	    		</div>
+	    	</form>
+            
+     	</div>
+   </div>
+   
+ {% endblock %}

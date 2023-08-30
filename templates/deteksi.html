@@ -1,0 +1,92 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="card shadow">
+   		<div class="card-header py-3">
+	        <h4 class="m-0 font-weight-bold text-navy">Proses Deteksi</h4>
+	    </div>
+	    <div class="card-body">
+	    	<div class="row mx-0">
+	    		<h5 class="font-weight-bolder mb-4 mr-4">Output Download Hasil Deteksi</h5>
+	    		<input type="number" name="jml-file" id="jml-file" class="myinput" maxlength="1" style="width: 3rem;" max="10" min="2" value="2">
+	    	</div>
+	    	<div class="compare">
+	    		<form action = "{{ url_for('hasil') }}" method = "post" enctype="multipart/form-data">  
+	    		<div class="input-group mb-3 col-lg-7 area-input">
+				  <div class="custom-file">
+				    <input type="file" class="custom-file-input" name="file[]" required>
+				    <label class="custom-file-label" for="file1">Masukan Dokumen Anda</label>
+				  </div>
+				</div>
+				<div class="input-group mb-3 col-lg-7 area-input">
+				  <div class="custom-file">
+				    <input type="file" class="custom-file-input" name="file[]" required>
+				    <label class="custom-file-label" for="file2">Masukan Dokumen Anda</label>
+				  </div>
+				</div>
+				<div class="row area-submit">
+					<button type="submit" class="btn btn-success">Compare</button>
+				</div>
+				</form>
+	    	</div>
+	    	<h5 class="font-weight-bolder mb-4 mt-2 mr-4">Pilih Metode Pembandingan</h5>
+	    	<div class="row col-lg-12 mx-0">
+	    		<div class="col-lg-4 text-center">
+	    			<h6 style="font-weight: 700; color: #6278a3;">Metode Pembobotan Teks</h6>	
+	    			<div class="mb-3" ><span class="metode">Winnowing</span></div>
+	    			<div class="mb-3" ><span class="metode">TF-IDF</span></div>
+	    		</div>
+	    		<div class="col-lg-4 text-center">
+	    			<h6 style="font-weight: 700; color: #6278a3;">Metode Similarity</h6>	
+	    			<div class="mb-3" ><span class="metode">Jaccard Similarity</span></div>
+	    			<div class="mb-3" ><span class="metode">Cosine Similarity</span></div>
+	    			<div class="mb-3" ><span class="metode">Dice Similarity</span></div>
+	    		</div>
+	    		<div class="col-lg-4 text-center">
+	    			<h6 style="font-weight: 700; color: #6278a3;">Metode Sinonim</h6>	
+	    			<div class="mb-3" ><span class="metode">With Synonym Recognition</span></div>
+	    		</div>
+	    	</div>
+	    	<h5 class="font-weight-bolder mb-4 mt-2 mr-4">Proses</h5>
+            
+     	</div>
+   </div>
+   <script type="text/javascript">
+   	$('.custom-file-input').on('change',function(){
+	    var fileName = $(this).val();
+	    $(this).siblings('.custom-file-label').text(fileName)
+	})
+	$('#jml-file').on('blur', function(){
+		let val = $(this).val()
+		if(val > 10){
+			val = 10
+			$(this).val(val)
+		}else if(val < 2){
+			val = 2
+			$(this).val(val)
+		}
+		let exist = $('.area-input').length
+		console.log('val '+val)
+		console.log('exist '+exist)
+		if(exist < val){
+			val-= exist
+			for(let i=0; i<val; i++){
+				$(`<div class="input-group mb-3 col-lg-7 area-input">
+				  <div class="custom-file">
+				    <input type="file" class="custom-file-input" name="file[]" required>
+				    <label class="custom-file-label" for="file2">Masukan Dokumen Anda</label>
+				  </div>
+				</div>`).insertBefore('.area-submit')
+			}	
+		}else if(exist > val){
+			sisa = exist-val
+			console.log('sisa '+sisa)
+			for(let i=0; i<sisa; i++){
+				$('.compare').find('.area-input').last().remove()
+				console.log($('.compare').find('.area-input').length)
+			}	
+		}
+		
+
+	})
+   </script>
+ {% endblock %}

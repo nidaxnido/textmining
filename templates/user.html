@@ -1,0 +1,178 @@
+{% extends "layout.html" %}
+{% block content %}
+   <div class="card shadow">
+   		<div class="card-header py-3">
+	        <h4 class="m-0 font-weight-bold text-navy">Daftar Penguna</h4>
+	    </div>
+	    <div class="card-body">
+	    	<div>
+	    		<button class="btn btn-navy mb-3 btn-xs text-md bg-dark text-light" data-toggle="modal" data-target="#modal-form" style="float:right;"><i class="fa fa-plus-circle text-light"></i> Tambah User  </button>
+	    	</div>
+	    	
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Nama</th>
+                            <th>Username</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    	{% for item in data %}
+                        <tr>
+                            <td>{{ item[1] }}</td>
+                            <td>{{ item[2] }}</td>
+                        	<td><a href="" data-id="{{ item[0] }}" data-nama="{{ item[1] }}" data-username="{{ item[2] }}" class="btn-edit" ><i class="fa fa-edit text-success mr-2" ></i></a>
+                        		<a href="" data-id="{{ item[0] }}" data-nama="{{ item[1] }}" class="btn-delete"><i class="fa fa-trash text-danger"></i></a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+     	</div>
+   </div>
+   <!-- modal -->
+   <div class="modal fade" id="modal-form" tabindex="-1" role="dialog"  aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content bg-gray">
+	      <div class="modal-header">
+	        <h5 class="modal-title">Tambah User</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	        <form action = "{{ url_for('adduser') }}" method = "post" enctype="multipart/form-data">  
+	        	
+	      <div class="modal-body">
+	          <div class="form-group row">
+	            <label for="recipient-name" class="col-form-label col-lg-2">Nama:</label>
+	            <div class="col-lg-10">
+	            	<input type="text" class="form-control" name="nama" >
+	            	
+	            </div>
+	          </div>
+	          <div class="form-group row">
+	            <label for="recipient-name" class="col-form-label col-lg-2">Username</label>
+	            <div class="col-lg-10">
+	            	<input type="text" class="form-control" name="username" >
+	            	
+	            </div>
+	          </div>
+	          <div class="form-group row">
+	            <label for="message-text" class="col-form-label col-lg-2">Password</label>
+	            <div class="col-lg-10">
+	            	<input type="password" class="form-control" name="password" >
+	            </div>
+	            
+	          </div>
+	      </div>
+	      <div class="text-center pb-4">
+	        <button type="submit" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-save"></i> Save</button>
+	        <button type="button" class="btn btn-light text-md btn-shadow mr-2"><i class="fas fa-undo"></i> Reset</button>
+	        <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> Cancel</button>
+	      </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+	<!-- end of modal add -->
+	<!-- modal edit -->
+	<div class="modal fade" id="modal-edit" tabindex="-1" role="dialog"  aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content bg-gray">
+	      <div class="modal-header">
+	        <h5 class="modal-title">Edit User</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	        <form action = "{{ url_for('edituser', id=0) }}" id="form-edit" method = "post" enctype="multipart/form-data">  
+	        	<input type="hidden" name="id" value="" id="id-edit">
+	      <div class="modal-body">
+	          <div class="form-group row">
+	            <label for="recipient-name" class="col-form-label col-lg-2">Nama:</label>
+	            <div class="col-lg-10">
+	            	<input type="text" class="form-control" name="nama" id="nama-edit" >
+	            	
+	            </div>
+	          </div>
+	          <div class="form-group row">
+	            <label for="recipient-name" class="col-form-label col-lg-2">Username</label>
+	            <div class="col-lg-10">
+	            	<input type="text" class="form-control" name="username" id="username-edit" >
+	            	
+	            </div>
+	          </div>
+	          <div class="form-group row">
+	            <label for="message-text" class="col-form-label col-lg-2">Password</label>
+	            <div class="col-lg-10">
+	            	<input type="password" class="form-control" name="password" >
+	            </div>
+	            
+	          </div>
+	      </div>
+	      <div class="text-center pb-4">
+	        <button type="submit" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-save"></i> Save</button>
+	        <button type="button" class="btn btn-light text-md btn-shadow mr-2"><i class="fas fa-undo"></i> Reset</button>
+	        <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> Cancel</button>
+	      </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+	<!-- end of modal edit -->
+	<!-- modal confirm delete -->
+	<div class="modal fade" id="modal-delete" tabindex="-1" role="dialog"  aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title bg-gray">Confirm Delete</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	          <div class="row mx-0">
+	          	<h3>Apakah Anda yakin akan menghapus user <span id="nama-user"></span>?</h3>
+	          </div>
+	      </div>
+	      <div class="text-center pb-4">
+	        <a href="{{ url_for('deleteuser', id=0) }}" id="yes-delete" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-check"></i> Yes</a>
+	        <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> No</button>
+	      </div>
+	        
+	    </div>
+	  </div>
+	</div>
+	<!-- end of delete modal -->
+	<script type="text/javascript">
+		$('.btn-delete').on('click', function(e){
+			e.preventDefault();
+			let id = $(this).data('id')
+			let nama = $(this).data('nama')
+			$('#nama-user').text(nama)
+			let action =$('#yes-delete').attr('href') 
+			console.log($('#yes-delete').attr('href'))
+			$('#yes-delete').attr('href', action.replace('0', id))
+			$('#modal-delete').modal('show')
+
+		})		
+		$('.btn-edit').on('click', function(e){
+			e.preventDefault();
+			let id = $(this).data('id')
+			let nama = $(this).data('nama')
+			let username = $(this).data('username')
+			let action =$('#form-edit').attr('action') 
+
+			$('#id-edit').val(id)
+			$('#nama-edit').val(nama)
+			$('#username-edit').val(username)
+
+			// console.log($('#yes-delete').attr('href'))
+			$('#form-edit').attr('action', action.replace('0', id))
+			$('#modal-edit').modal('show')
+
+		})		
+	</script>
+ {% endblock %}
