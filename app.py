@@ -3,6 +3,10 @@ from distutils.log import debug
 from fileinput import filename
 from PyPDF2 import PdfReader
 from flask_mysqldb import MySQL
+from winnowing import winnow
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
  
 app = Flask(__name__)
 app.secret_key='asdsdfsdfs13sdf_df%&'
@@ -42,8 +46,7 @@ def logout():
 
 @app.route('/')
 def home():
-    if 'username' not in session:
-        return redirect(url_for('login'))
+    checklogin()
     # setup for first time
     cursor = mysql.connection.cursor()
     cursor.execute("""SELECT * FROM settings""")
@@ -56,8 +59,7 @@ def home():
 
 @app.route('/user')
 def user():
-    if 'username' not in session:
-        return redirect(url_for('login'))
+    checklogin()
     cursor = mysql.connection.cursor()
     cursor.execute("""SELECT * FROM user""")
     data = cursor.fetchall()
@@ -90,7 +92,7 @@ def edituser():
     # msg = ''
     # if status == 1:
     #     msg = 'Berhasil menambahkan user!'
-    return render_template('user.html',tag='user', data=data)
+    # return render_template('user.html',tag='user', data=data)
 @app.route('/user/delete/<int:id>')
 def deleteuser(id):
     cursor = mysql.connection.cursor()
@@ -135,22 +137,200 @@ def sinonim():
     return render_template('sinonim.html',tag='sinonim')
 @app.route('/stopwords/')
 def stopwords():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    return render_template('stopwords.html',tag='stopwords')
+    checklogin()
+    cursor = mysql.connection.cursor()
+    cursor.execute("""SELECT * FROM stopwords""")
+    
+    data = cursor.fetchall()
+    # for x in kata:
+    #     cursor.execute(''' INSERT INTO stopwords(word) VALUES(%s)''',(x,))
+    #     mysql.connection.commit()
+    cursor.close()
+    return render_template('stopwords.html',tag='stopwords', data=data)
+@app.route('/add-stopwords/', methods = ['POST'])
+def addstopwords():
+    if request.method == 'POST':  
+        # dump(request)
+        kata = request.form['kata']
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("""SELECT * FROM stopwords WHERE word = %s""", (kata,))
+        result = cursor.fetchone()
+        status =''
+        
+        # cursor.close()
+        if not result:
+            # cursor = mysql.connection.cursor()
+            cursor.execute(''' INSERT INTO stopwords(word) VALUES(%s)''',(kata,))
+            mysql.connection.commit()
+            status =1
+            
+        else:
+            status =-1
+            
+        cursor.close()
+        # dump(request)
+        return redirect(url_for('stopwords'))
+@app.route('/edit-stopwords/', methods = ['POST'])
+def editstopwords():
+    if request.method == 'POST':  
+        id = request.form['id']
+        kata = request.form['kata']
+
+        cursor = mysql.connection.cursor()
+        sql = "UPDATE stopwords SET word=%s WHERE id=%s"
+        data = (kata, id,)
+
+        cursor.execute(sql, data)
+        mysql.connection.commit()
+        cursor.close()
+    return redirect(url_for('stopwords'))
+@app.route('/delete-stopwords/<int:id>')
+def deletestopwords(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("""DELETE FROM stopwords WHERE id = %s""", (id,))
+    mysql.connection.commit()
+    cursor.close()
+    
+    return redirect(url_for('stopwords'))
 @app.route('/kata-dasar/')
 def katadasar():
-    if 'username' not in session:
-        return redirect(url_for('login'))
-    return render_template('katadasar.html',tag='katadasar')
+    checklogin()
+    cursor = mysql.connection.cursor()
+    cursor.execute("""SELECT * FROM kata_dasar""")
+    
+    data = cursor.fetchall()
+
+    return render_template('katadasar.html',tag='katadasar', data=data)
+@app.route('/add-katadasar/', methods = ['POST'])
+def addkatadasar():
+    if request.method == 'POST':  
+        # dump(request)
+        kata = request.form['kata']
+
+        cursor = mysql.connection.cursor()
+        cursor.execute("""SELECT * FROM kata_dasar WHERE kata = %s""", (kata,))
+        result = cursor.fetchone()
+        status =''
+        
+        # cursor.close()
+        if not result:
+            # cursor = mysql.connection.cursor()
+            cursor.execute(''' INSERT INTO kata_dasar(kata) VALUES(%s)''',(kata,))
+            mysql.connection.commit()
+            status =1
+            
+        else:
+            status =-1
+            
+        cursor.close()
+        # dump(request)
+        return redirect(url_for('katadasar'))
+@app.route('/edit-katadasar/', methods = ['POST'])
+def editkatadasar():
+    if request.method == 'POST':  
+        id = request.form['id']
+        kata = request.form['kata']
+
+        cursor = mysql.connection.cursor()
+        sql = "UPDATE kata_dasar SET kata=%s WHERE id=%s"
+        data = (kata, id,)
+
+        cursor.execute(sql, data)
+        mysql.connection.commit()
+        cursor.close()
+    return redirect(url_for('katadasar'))
+@app.route('/delete-katadasar/<int:id>')
+def deletekatadasar(id):
+    cursor = mysql.connection.cursor()
+    cursor.execute("""DELETE FROM kata_dasar WHERE id = %s""", (id,))
+    mysql.connection.commit()
+    cursor.close()
+    
+    return redirect(url_for('katadasar'))
 @app.route('/proses-deteksi/')
 def deteksi():
-    if 'username' not in session:
-        return redirect(url_for('login'))
+    checklogin()
     return render_template('deteksi.html',tag='deteksi')
-# @app.route('/hasil-deteksi/')
-# def hasil():
-#     return render_template('hasil.html',tag='hasil')
+
+@app.route('/hasil-deteksi', methods = ['POST'])  
+def hasil():  
+    if request.method == 'POST':  
+        files = request.files.getlist('file[]')
+        # f.save(f.filename)
+        isi = [];
+        arrteks = []
+        for x in files:
+            reader = PdfReader(x)
+            page = reader.pages[0]
+            text = page.extract_text()    
+            temp = { "filename" : x.filename, "text" : text}
+            isi.append(temp)
+            arrteks.append(text)
+        text1 = arrteks[0]
+        text2 = arrteks[1]
+
+        #winnowing process
+        has1 = winnow(text1)
+        has2 = winnow(text2)
+        #winnowing and jaccard
+        arr1 = []
+        for x in has1:
+            arr1.append(x[1])
+        arr2 = []
+        for x in has2:
+            arr2.append(x[1])
+        similarity = jaccard_similarity(set(arr1), set(arr2))*100
+        similarity = round(similarity, 2)
+        winnows = []
+        winnows.append(str(similarity)+"%")
+
+        # winnow and cosine 
+        # preprocessing
+        arr1 = np.array(arr1)
+        arr2 = np.array(arr2)
+        len1 = len(arr1)
+        len2 = len(arr2)
+        if(len1 > len2):
+            pad2 = np.pad(arr2, (0, len1-len2), 'constant')
+            pad1 = arr1
+        else:
+            pad1 = np.pad(arr1, (0, len2-len1), 'constant')
+            pad2 = arr2
+        combined = np.vstack((pad1, pad2))
+        similarity = cosine_similarity(combined)
+        percentage = round(similarity[0][1], 2) * 100
+        winnows.append(str(percentage)+"%")
+
+        # Tfidf
+        tfidf = TfidfVectorizer()
+        arr = [text1, text2]
+        tfidfs = []
+        result = tfidf.fit_transform(arr)
+        result = result.toarray()
+        similarity = jaccard_similarity(set(result[0]), set(result[1]))*100
+        tfidfs.append(str(round(similarity,2))+"%")
+
+        # cosine
+        similarity = cosine_similarity(result)
+        percentage = similarity[0][1] * 100
+        percentage = round(similarity[0][1], 2) * 100
+        tfidfs.append(str(percentage)+"%")
+
+        
+        return render_template("hasil.html", tag='hasil', data = isi, winnow=winnows, tfidf=tfidfs)  
+def jaccard_similarity(A, B):
+    #Find intersection of two sets
+    nominator = A.intersection(B)
+
+    #Find union of two sets
+    denominator = A.union(B)
+
+    #Take the ratio of sizes
+    similarity = len(nominator)/len(denominator)
+    
+    return similarity
+
 @app.route('/settings/')
 def setting():
     if 'username' not in session:
@@ -160,20 +340,6 @@ def setting():
     setting = cursor.fetchone()
     cursor.close()
     return render_template('setting.html',tag='setting', data=setting)
-@app.route('/hasil-deteksi', methods = ['POST'])  
-def hasil():  
-    if request.method == 'POST':  
-        files = request.files.getlist('file[]')
-        # f.save(f.filename)
-        isi = [];
-        for x in files:
-            reader = PdfReader(x)
-            page = reader.pages[0]
-            text = page.extract_text()    
-            temp = { "filename" : x.filename, "text" : text}
-            isi.append(temp)
-        
-        return render_template("hasil.html", tag='hasil', data = isi)  
 @app.route('/edit-setting', methods = ['POST'])
 def editsetting():
     if request.method == 'POST':  
@@ -196,5 +362,8 @@ def editsetting():
         mysql.connection.commit()
         cursor.close()
     return redirect(url_for('setting'))
+def checklogin():
+    if 'username' not in session:
+        return redirect(url_for('login'))    
 if __name__ == '__main__':
     app.run(debug=True)

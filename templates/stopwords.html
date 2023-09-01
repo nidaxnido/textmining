@@ -12,26 +12,18 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Kata Utama</th>
-                            <th>Sinonim</th>
+                            <th>Kata Stopwords</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for item in data %}
                         <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td><a href=""><i class="fa fa-edit text-success mr-2" ></i></a><a href=""><i class="fa fa-trash text-danger"></i></a></td>
+                            <td>{{ item[1] }}</td>
+                          <td><a href="" data-id="{{ item[0] }}" data-kata="{{ item[1] }}" class="btn-edit" ><i class="fa fa-edit text-success mr-2" ></i></a>
+                            <a href="" data-id="{{ item[0] }}" data-kata="{{ item[1] }}" class="btn-delete"><i class="fa fa-trash text-danger"></i></a></td>
                         </tr>
-                        <tr>
-                            <td>Garrett Winters</td>
-                            <td>Accountant</td>
-                            <td><a href=""><i class="fa fa-edit text-success mr-2" ></i></a><a href=""><i class="fa fa-trash text-danger"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>Ashton Cox</td>
-                            <td>Junior Technical Author</td>
-                            <td><a href=""><i class="fa fa-edit text-success mr-2" ></i></a><a href=""><i class="fa fa-trash text-danger"></i></a></td>
+                        {% endfor %}
                         </tr>
                     </tbody>
                 </table>
@@ -39,39 +31,122 @@
         </div>
    </div>
    <!-- modal -->
+   
    <div class="modal fade" id="modal-form" tabindex="-1" role="dialog"  aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content bg-gray">
-          <div class="modal-header">
-            <h5 class="modal-title">Tambah Stopword</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group row">
-                <label for="recipient-name" class="col-form-label col-lg-2">Stopword:</label>
-                <div class="col-lg-10">
-                    <input type="text" class="form-control" name="kata" >
-                    
-                </div>
-              </div>
-              <!-- <div class="form-group row">
-                <label for="message-text" class="col-form-label col-lg-2">Sinonim:</label>
-                <div class="col-lg-10">
-                    <input type="text" class="form-control" name="sinonim" >
-                </div>
-                
-              </div> -->
-            </form>
-          </div>
-          <div class="text-center pb-4">
-            <button type="button" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-save"></i> Save</button>
-            <button type="button" class="btn btn-light text-md btn-shadow mr-2"><i class="fas fa-undo"></i> Reset</button>
-            <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> Cancel</button>
-          </div>
+    <div class="modal-dialog" role="document">
+      <div class="modal-content bg-gray">
+        <div class="modal-header">
+          <h5 class="modal-title">Tambah Stopword</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+          <form action = "{{ url_for('addstopwords') }}" method = "post" enctype="multipart/form-data">  
+            
+        <div class="modal-body">
+            <div class="form-group row">
+              <label for="recipient-name" class="col-form-label col-lg-2">Kata:</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control" name="kata" required>
+                
+              </div>
+            </div>
+        </div>
+        <div class="text-center pb-4">
+          <button type="submit" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-save"></i> Save</button>
+          <button type="button" class="btn btn-light text-md btn-shadow mr-2 btn-reset"><i class="fas fa-undo"></i> Reset</button>
+          <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> Cancel</button>
+        </div>
+          </form>
       </div>
     </div>
+  </div>
+  <!-- end of modal add -->
+  <!-- modal edit -->
+  <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content bg-gray">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Stopwords</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+          <form action = "{{ url_for('editstopwords', id=0) }}" id="form-edit" method = "post" enctype="multipart/form-data">  
+            <input type="hidden" name="id" value="" id="id-edit">
+        <div class="modal-body">
+            <div class="form-group row">
+              <label for="recipient-name" class="col-form-label col-lg-2">Kata:</label>
+              <div class="col-lg-10">
+                <input type="text" class="form-control" name="kata" id="kata-edit" required>
+                
+              </div>
+            </div>
+        </div>
+        <div class="text-center pb-4">
+          <button type="submit" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-save"></i> Save</button>
+          <button type="button" class="btn btn-light text-md btn-shadow mr-2 btn-reset"><i class="fas fa-undo"></i> Reset</button>
+          <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> Cancel</button>
+        </div>
+          </form>
+      </div>
+    </div>
+  </div>
+  <!-- end of modal edit -->
+  <!-- modal confirm delete -->
+  <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title bg-gray">Confirm Delete</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row mx-0">
+              <h3>Apakah Anda yakin akan menghapus stopwords <span id="kata-stopwords"></span>?</h3>
+            </div>
+        </div>
+        <div class="text-center pb-4">
+          <a href="{{ url_for('deletestopwords', id=0) }}" id="yes-delete" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-check"></i> Yes</a>
+          <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> No</button>
+        </div>
+          
+      </div>
+    </div>
+  </div>
+  <!-- end of delete modal -->
+<script type="text/javascript">
+    $('.btn-delete').on('click', function(e){
+      e.preventDefault();
+      let id = $(this).data('id')
+      let kata = $(this).data('kata')
+      $('#kata-stopwords').text(kata)
+      let action =$('#yes-delete').attr('href') 
+      console.log($('#yes-delete').attr('href'))
+      $('#yes-delete').attr('href', action.replace('0', id))
+      $('#modal-delete').modal('show')
+
+    })    
+    $('.btn-edit').on('click', function(e){
+      e.preventDefault();
+      let id = $(this).data('id')
+      let kata = $(this).data('kata')
+      let action =$('#form-edit').attr('action') 
+
+      $('#id-edit').val(id)
+      $('#kata-edit').val(kata)
+      
+
+      // console.log($('#yes-delete').attr('href'))
+      $('#form-edit').attr('action', action.replace('0', id))
+      $('#modal-edit').modal('show')
+
+    })    
+    $('.btn-reset').on('click', function(){
+      let parent = $(this).parents('#modal-form')
+      parent.find('input').val('')
+    })
+  </script>
  {% endblock %}

@@ -14,6 +14,33 @@
 	    		<div class="mb-2">File name: {{ name }}</div>
 	    		<div class="mb-2">Text content: {{ text }}</div>
 	    	</div> -->
+            
+            <h6  style="font-weight: 700; text-decoration: underline;" >Perbandingan dokumen 1 dan 2</h6>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Jaccard</th>
+                          <th scope="col">Cosine</th>
+                          <!-- <th scope="col">Handle</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <th>Winnowing</th>
+                              <td>{{ winnow[0] }}</td>
+                              <td>{{ winnow[1] }}</td>
+                          </tr>
+                          <tr>
+                            <th>TF-IDF</th>
+                            <td>{{ tfidf[0] }}</td>
+                            <td>{{ tfidf[1] }}</td>
+                          </tr>
+                      </tbody>
+                </table>
+            </div>
+            <h6 style="font-weight: 700; margin-top: 20px;text-decoration: underline;">Konten Dokumen</h6>
 	    	<div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
