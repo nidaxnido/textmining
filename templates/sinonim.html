@@ -17,23 +17,7 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                        	<td><a href=""><i class="fa fa-edit text-success mr-2" ></i></a><a href=""><i class="fa fa-trash text-danger"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>Garrett Winters</td>
-                            <td>Accountant</td>
-                        	<td><a href=""><i class="fa fa-edit text-success mr-2" ></i></a><a href=""><i class="fa fa-trash text-danger"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td>Ashton Cox</td>
-                            <td>Junior Technical Author</td>
-                        	<td><a href=""><i class="fa fa-edit text-success mr-2" ></i></a><a href=""><i class="fa fa-trash text-danger"></i></a></td>
-                        </tr>
-                    </tbody>
+                    
                 </table>
             </div>
      	</div>
@@ -48,8 +32,8 @@
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
+	      <form action = "{{ url_for('addsinonim') }}" method = "post" enctype="multipart/form-data">  
 	      <div class="modal-body">
-	        <form>
 	          <div class="form-group row">
 	            <label for="recipient-name" class="col-form-label col-lg-2">Kata:</label>
 	            <div class="col-lg-10">
@@ -64,14 +48,129 @@
 	            </div>
 	            
 	          </div>
-	        </form>
 	      </div>
 	      <div class="text-center pb-4">
-	        <button type="button" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-save"></i> Save</button>
+	        <button type="submit" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-save"></i> Save</button>
 	        <button type="button" class="btn btn-light text-md btn-shadow mr-2"><i class="fas fa-undo"></i> Reset</button>
 	        <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> Cancel</button>
 	      </div>
+	      </form>
 	    </div>
 	  </div>
 	</div>
+	<!-- modal edit -->
+	 <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog"  aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content bg-gray">
+	      <div class="modal-header">
+	        <h5 class="modal-title">Edit Sinonim Kata</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <form id="form-edit" action = "{{ url_for('editsinonim', id=0) }}" method = "post" enctype="multipart/form-data">  
+	      <div class="modal-body">
+	      		<input type="hidden" name="id" value="" id="id-edit">
+	          <div class="form-group row">
+	            <label for="recipient-name" class="col-form-label col-lg-2">Kata:</label>
+	            <div class="col-lg-10">
+	            	<input type="text" class="form-control" name="kata" id="kata-edit" required>
+	            	
+	            </div>
+	          </div>
+	          <div class="form-group row">
+	            <label for="message-text" class="col-form-label col-lg-2">Sinonim:</label>
+	            <div class="col-lg-10">
+	            	<input type="text" class="form-control" name="sinonim" id="sinonim-edit" required >
+	            </div>
+	            
+	          </div>
+	      </div>
+	      <div class="text-center pb-4">
+	        <button type="submit" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-save"></i> Save</button>
+	        <button type="button" class="btn btn-light text-md btn-shadow mr-2"><i class="fas fa-undo"></i> Reset</button>
+	        <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> Cancel</button>
+	      </div>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+	<!-- end of modal edit -->
+	<!-- modal confirm delete -->
+  <div class="modal fade" id="modal-delete" tabindex="-1" role="dialog"  aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title bg-gray">Confirm Delete</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row mx-0">
+              <h3>Apakah Anda yakin akan menghapus sinonim <span id="kata-sinonim"></span>?</h3>
+            </div>
+        </div>
+        <div class="text-center pb-4">
+          <a href="{{ url_for('deletesinonim', id=0) }}" id="yes-delete" class="btn btn-light text-md btn-shadow mr-2" ><i class="fas fa-check"></i> Yes</a>
+          <button type="button" class="btn btn-light text-md btn-shadow" data-dismiss="modal"><i class="fas fa-times-circle text-danger"></i> No</button>
+        </div>
+          
+      </div>
+    </div>
+  </div>
+<script type="text/javascript">
+    $('.btn-delete').on('click', function(e){
+      e.preventDefault();
+      let id = $(this).data('id')
+      let kata = $(this).data('kata')
+      $('#kata-sinonim').text(kata)
+      let action =$('#yes-delete').attr('href') 
+      console.log($('#yes-delete').attr('href'))
+      $('#yes-delete').attr('href', action.replace('0', id))
+      $('#modal-delete').modal('show')
+
+    })    
+    $('.btn-edit').on('click', function(e){
+      e.preventDefault();
+      let id = $(this).data('id')
+      let kata = $(this).data('kata')
+      let sinonim = $(this).data('sinonim')
+      let action =$('#form-edit').attr('action') 
+
+      $('#id-edit').val(id)
+      $('#kata-edit').val(kata)
+      $('#sinonim-edit').val(sinonim)
+      
+
+      // console.log($('#yes-delete').attr('href'))
+      $('#form-edit').attr('action', action.replace('0', id))
+      $('#modal-edit').modal('show')
+
+    })    
+    $('.btn-reset').on('click', function(){
+      let parent = $(this).parents('#modal-form')
+      parent.find('input').val('')
+    })
+
+    var empDataTable = $('#dataTable').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'serverMethod': 'post',
+        'ajax': {
+            'url':'/ajaxsinonim'
+        },
+        'lengthMenu': [[10, 25, 50, -1], [ 10, 25, 50, "All"]],
+        searching: true,
+        sort: false,
+        "serverSide": true,
+        'columns': [
+            { data: 'kata' },
+            { data: 'sinonim' },
+            { data: 'aksi' },
+            
+        ]
+    });
+</script>
+
  {% endblock %}

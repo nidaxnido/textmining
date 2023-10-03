@@ -16,6 +16,7 @@
 	    	</div> -->
             
             <h6  style="font-weight: 700; text-decoration: underline;" >Perbandingan dokumen 1 dan 2</h6>
+             
             <div class="table-responsive">
                 <table class="table table-bordered">
                     <thead>
@@ -23,6 +24,7 @@
                           <th scope="col">#</th>
                           <th scope="col">Jaccard</th>
                           <th scope="col">Cosine</th>
+                          <th scope="col">Dice</th>
                           <!-- <th scope="col">Handle</th> -->
                         </tr>
                       </thead>
@@ -31,17 +33,19 @@
                               <th>Winnowing</th>
                               <td>{{ winnow[0] }}</td>
                               <td>{{ winnow[1] }}</td>
+                              <td>{{ winnow[2] }}</td>
                           </tr>
                           <tr>
                             <th>TF-IDF</th>
                             <td>{{ tfidf[0] }}</td>
                             <td>{{ tfidf[1] }}</td>
+                            <td>{{ tfidf[2] }}</td>
                           </tr>
                       </tbody>
                 </table>
             </div>
             <h6 style="font-weight: 700; margin-top: 20px;text-decoration: underline;">Konten Dokumen</h6>
-	    	<div class="table-responsive">
+	    	    <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -55,6 +59,27 @@
                         <tr>
                         	<td>{{ item.filename }}</td>
                         	<td>{{ item.text }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <h6 style="font-weight: 700; margin-top: 20px;text-decoration: underline;">Proses Transformasi Dokumen</h6>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Proses</th>
+                            <th>Teks 1</th>
+                            <th>Teks 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in changes %}
+                        <tr>
+                          <td>{{ item[0] }}</td>
+                          <td>{{ item[1] }}</td>
+                          <td>{{ item[2] }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

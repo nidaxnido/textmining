@@ -16,15 +16,7 @@
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {% for item in data %}
-                        <tr>
-                            <td>{{ item[1] }}</td>
-                          <td><a href="" data-id="{{ item[0] }}" data-kata="{{ item[1] }}" class="btn-edit" ><i class="fa fa-edit text-success mr-2" ></i></a>
-                            <a href="" data-id="{{ item[0] }}" data-kata="{{ item[1] }}" class="btn-delete"><i class="fa fa-trash text-danger"></i></a></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+                    
                 </table>
             </div>
      	</div>
@@ -144,5 +136,22 @@
       let parent = $(this).parents('#modal-form')
       parent.find('input').val('')
     })
+    var empDataTable = $('#dataTable').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'serverMethod': 'post',
+        'ajax': {
+            'url':'/ajaxsinonim'
+        },
+        'lengthMenu': [[10, 25, 50, -1], [ 10, 25, 50, "All"]],
+        searching: true,
+        sort: false,
+        "serverSide": true,
+        'columns': [
+            { data: 'kata' },
+            { data: 'aksi' },
+            
+        ]
+    });
 </script>
  {% endblock %}
